@@ -4,6 +4,8 @@ import type { PracticeSession, TopicSet } from '../types/ielts';
 import { calculateOverallBand, normalizeCriterionBand } from './ieltsLogic';
 
 const TOPICS_STORAGE_KEY = 'orato_ielts_topics_v1';
+const TOPICS_DEFAULTS_VERSION_KEY = 'orato_ielts_defaults_version';
+const CURRENT_DEFAULTS_VERSION = 'focus-speaking-2026-11-17';
 const HISTORY_STORAGE_KEY = 'orato_ielts_history_v1';
 
 const DB_NAME = 'orato_ielts_audio_db';
@@ -77,10 +79,25 @@ export async function deleteRecordingBlob(sessionId: string): Promise<void> {
 export function loadTopics(): TopicSet[] {
   try {
     const raw = localStorage.getItem(TOPICS_STORAGE_KEY);
-    if (!raw) return DEFAULT_TOPIC_BANK;
+    const savedVersion = localStorage.getItem(TOPICS_DEFAULTS_VERSION_KEY);
+    if (!raw) {
+      localStorage.setItem(TOPICS_DEFAULTS_VERSION_KEY, CURRENT_DEFAULTS_VERSION);
+      return DEFAULT_TOPIC_BANK;
+    }
     const parsed = JSON.parse(raw);
     if (Array.isArray(parsed) && parsed.length > 0) {
-      return parsed as TopicSet[];
+      const storedTopics = parsed as TopicSet[];
+      if (savedVersion !== CURRENT_DEFAULTS_VERSION) {
+        const existingIds = new Set(storedTopics.map((t) => t.id));
+        const customTopics = storedTopics.filter((t) => t.isCustom);
+        const remainingStored = storedTopics.filter((t) => !t.isCustom);
+        const newDefaultTopics = DEFAULT_TOPIC_BANK.filter((t) => !existingIds.has(t.id));
+        const merged = [...customTopics, ...newDefaultTopics, ...remainingStored];
+        localStorage.setItem(TOPICS_STORAGE_KEY, JSON.stringify(merged));
+        localStorage.setItem(TOPICS_DEFAULTS_VERSION_KEY, CURRENT_DEFAULTS_VERSION);
+        return merged;
+      }
+      return storedTopics;
     }
   } catch {
     // Fall back to default curated bank
@@ -91,6 +108,7 @@ export function loadTopics(): TopicSet[] {
 export function saveTopics(topics: TopicSet[]): void {
   try {
     localStorage.setItem(TOPICS_STORAGE_KEY, JSON.stringify(topics));
+    localStorage.setItem(TOPICS_DEFAULTS_VERSION_KEY, CURRENT_DEFAULTS_VERSION);
   } catch {
     // Ignore quota errors
   }

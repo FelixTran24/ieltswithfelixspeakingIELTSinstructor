@@ -1,6 +1,11 @@
 import type { TopicSet } from '../types/ielts';
+import {
+  FOCUS_SPEAKING_PART_1,
+  FOCUS_SPEAKING_PART_2,
+  FOCUS_SPEAKING_PART_3,
+} from './focusSpeakingPack';
 
-export const DEFAULT_TOPIC_BANK: TopicSet[] = [
+const CURATED_STARTER_TOPICS: TopicSet[] = [
   // ===================== PART 1: INTRODUCTION =====================
   {
     id: 'p1-holiday',
@@ -28,66 +33,6 @@ export const DEFAULT_TOPIC_BANK: TopicSet[] = [
       {
         id: 'p1-hol-4',
         text: 'Do you think taking regular holidays is important for people nowadays?',
-        recommendedSeconds: 45,
-      },
-    ],
-  },
-  {
-    id: 'p1-work-study',
-    title: 'Work & Study',
-    part: 1,
-    category: 'Personal Background',
-    description: 'Bộ câu hỏi mở đầu phổ biến nhất trong hầu hết các kỳ thi IELTS Speaking thực tế.',
-    createdAt: '2026-10-02T08:00:00Z',
-    questions: [
-      {
-        id: 'p1-ws-1',
-        text: 'Do you work or are you a student right now?',
-        recommendedSeconds: 45,
-      },
-      {
-        id: 'p1-ws-2',
-        text: 'What do you enjoy most about your current job or major?',
-        recommendedSeconds: 45,
-      },
-      {
-        id: 'p1-ws-3',
-        text: 'Do you prefer working or studying in the morning or late at night?',
-        recommendedSeconds: 45,
-      },
-      {
-        id: 'p1-ws-4',
-        text: 'Is there any skill you would like to improve to help your future career?',
-        recommendedSeconds: 45,
-      },
-    ],
-  },
-  {
-    id: 'p1-hometown',
-    title: 'Hometown',
-    part: 1,
-    category: 'Places',
-    description: 'Mô tả nơi bạn sinh sống, nhịp sống địa phương và sự thay đổi theo thời gian.',
-    createdAt: '2026-10-03T08:00:00Z',
-    questions: [
-      {
-        id: 'p1-ht-1',
-        text: 'Can you tell me a little bit about your hometown?',
-        recommendedSeconds: 45,
-      },
-      {
-        id: 'p1-ht-2',
-        text: 'What is the most interesting part of your town or city for visitors?',
-        recommendedSeconds: 45,
-      },
-      {
-        id: 'p1-ht-3',
-        text: 'Has your hometown changed much since you were a child?',
-        recommendedSeconds: 45,
-      },
-      {
-        id: 'p1-ht-4',
-        text: 'Would you like to continue living there in the future?',
         recommendedSeconds: 45,
       },
     ],
@@ -295,3 +240,13 @@ export const DEFAULT_TOPIC_BANK: TopicSet[] = [
     ],
   },
 ];
+
+export const DEFAULT_TOPIC_BANK: TopicSet[] = [
+  ...FOCUS_SPEAKING_PART_1,
+  ...CURATED_STARTER_TOPICS.filter((t) => t.part === 1),
+  ...FOCUS_SPEAKING_PART_2,
+  ...CURATED_STARTER_TOPICS.filter((t) => t.part === 2),
+  ...FOCUS_SPEAKING_PART_3,
+  ...CURATED_STARTER_TOPICS.filter((t) => t.part === 3),
+];
+
