@@ -1,0 +1,6 @@
+{
+  "name": "Orato IELTS",
+  "description": "Nền tảng luyện tập IELTS Speaking hiện đại với chế độ phòng thi ẩn câu hỏi, giọng giám khảo tự nhiên, chấm điểm 4 tiêu chí theo chuẩn IELTS, phân tích phát âm IPA từng từ và theo dõi tiến bộ.",
+  "requestFramePermissions": ["microphone"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
