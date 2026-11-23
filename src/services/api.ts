@@ -36,6 +36,11 @@ export async function fetchExaminerSpeechUrl(params: {
 
   if (!response.ok) {
     const errBody = await response.json().catch(() => ({}));
+    if (response.status === 404 && !errBody.error) {
+      throw new Error(
+        'Không tìm thấy máy chủ API (/api/tts — HTTP 404). Hãy triển khai trên nền tảng có hỗ trợ Node.js / Serverless Functions (như Vercel, Render hoặc Cloud Run) thay vì web tĩnh thuần.'
+      );
+    }
     throw new Error(errBody.error || `Không thể tạo giọng đọc giám khảo (HTTP ${response.status}).`);
   }
 
@@ -86,6 +91,11 @@ export async function analyzeSpeakingSubmission(params: {
 
   if (!response.ok) {
     const errBody = await response.json().catch(() => ({}));
+    if (response.status === 404 && !errBody.error) {
+      throw new Error(
+        'Không tìm thấy máy chủ chấm điểm (/api/analyze-speaking — HTTP 404). Nền tảng host hiện tại đang chỉ chạy web tĩnh mà chưa chạy backend API — hãy dùng Vercel (đã cấu hình sẵn /api), Render, Railway hoặc Google Cloud Run kèm biến môi trường GEMINI_API_KEY.'
+      );
+    }
     throw new Error(errBody.error || `Phân tích bài nói thất bại (HTTP ${response.status}).`);
   }
 
